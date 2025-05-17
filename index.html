@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thunderbird Guide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f4f4f4;
+    min-height: 100vh;
+  }
+  .khmer {
+    font-family: 'Battambang', 'Segoe UI', Arial, sans-serif !important;
+  }
+  .header {
+    background: linear-gradient(90deg, #0074d9 60%, #00c6fb 100%);
+    color: white;
+    text-align: center;
+    padding: 18px 0;
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .main {
+    display: flex;
+    height: calc(100vh - 56px); /* header height */
+    min-height: 0;
+  }
+  .sidebar {
+    position: sticky;
+    top: 0;
+    width: 260px;
+    height: 100vh;
+    background: linear-gradient(180deg, #0074d9 0%, #00c6fb 100%);
+    color: #fff;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.07);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 10;
+  }
+  .sidebar-logo {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 36px 0 24px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.13);
+  }
+  .sidebar-logo i {
+    font-size: 48px;
+    margin-bottom: 10px;
+    color: #fff;
+    filter: drop-shadow(0 2px 8px #00c6fb88);
+  }
+  .sidebar-logo span {
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: #fff;
+  }
+  .sidebar-menu {
+    width: 100%;
+    padding: 0;
+    margin-top: 36px;
+  }
+  .sidebar-menu li {
+    list-style: none;
+    padding: 18px 36px;
+    font-size: 17px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, padding-left 0.2s;
+    border-left: 4px solid transparent;
+    color: #fff;
+    background: none;
+    border-radius: 0 20px 20px 0;
+    margin-bottom: 6px;
+  }
+  .sidebar-menu li i {
+    font-size: 20px;
+    min-width: 24px;
+  }
+  .sidebar-menu li:hover,
+  .sidebar-menu li.active {
+    background: rgba(255,255,255,0.13);
+    color: #ffd700;
+    border-left: 4px solid #ffd700;
+    padding-left: 44px;
+  }
+  .sidebar-menu li span {
+    flex: 1;
+    transition: color 0.2s;
+  }
+  .content-area {
+    flex: 1;
+    height: 100vh;
+    overflow-y: auto;
+    background: white;
+    box-sizing: border-box;
+    padding: 40px 40px 40px 40px;
+    box-shadow: 0 0 24px rgba(0,0,0,0.04);
+  }
+  .container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+  }
+  .item {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 116, 217, 0.08);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid #e0e0e0;
+  }
+  .item:hover {
+    transform: translateY(-7px) scale(1.02);
+    box-shadow: 0 6px 24px rgba(0, 116, 217, 0.13);
+  }
+  .item img {
+    width: 100%;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    background: #f8fafd;
+    display: block;
+    height: auto;
+    max-height: 300px;
+    object-fit: contain;
+  }
+  .item p {
+    padding: 18px;
+    font-size: 17px;
+    line-height: 1.7;
+    color: #222;
+  }
+  .item strong {
+    color: #0074d9;
+  }
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .modal img {
+    max-width: 90vw;
+    max-height: 70vh;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #000;
+    width: auto;
+    height: auto;
+  }
+  .modal-controls {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+  }
+  .modal button {
+    background: #0074d9;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  .modal button:hover {
+    background: #005fa3;
+  }
+  .translate-btn {
+    position: fixed;
+    top: 18px;
+    right: 32px;
+    z-index: 1001;
+    background: #ffd700;
+    color: #222;
+    border: none;
+    padding: 10px 22px;
+    font-size: 16px;
+    font-family: inherit;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: background 0.2s, color 0.2s;
+  }
+  .translate-btn:hover {
+    background: #ffe066;
+    color: #0074d9;
+  }
+
+  /* Tablet */
+  @media (max-width: 900px) {
+    .main {
+      flex-direction: column;
+      height: auto;
+    }
+    .sidebar {
+      position: static;
+      width: 100%;
+      min-height: unset;
+      flex-direction: row;
+      justify-content: center;
+      padding: 0;
+      height: auto;
+    }
+    .sidebar-menu {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      margin-top: 0;
+    }
+    .sidebar-menu li {
+      border-radius: 0;
+      padding: 14px 18px;
+      font-size: 15px;
+      border-left: none;
+      border-bottom: 4px solid transparent;
+    }
+    .sidebar-menu li:hover,
+    .sidebar-menu li.active {
+      border-left: none;
+      border-bottom: 4px solid #ffd700;
+      background: rgba(255,255,255,0.13);
+      padding-left: 18px;
+    }
+    .content-area {
+      padding: 20px 5vw;
+      height: auto;
+    }
+    .container {
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+    }
+    .item img {
+      max-height: 200px;
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 600px) {
+    .header {
+      font-size: 18px;
+      padding: 12px 0;
+    }
+    .sidebar {
+      flex-direction: row;
+      width: 100%;
+      height: auto;
+      padding: 0;
+    }
+    .sidebar-logo {
+      display: none;
+    }
+    .sidebar-menu {
+      flex-direction: row;
+      width: 100%;
+      margin-top: 0;
+      padding: 0;
+    }
+    .sidebar-menu li {
+      font-size: 13px;
+      padding: 10px 8px;
+      gap: 6px;
+    }
+    .content-area {
+      padding: 10px 2vw;
+    }
+    .container {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .item img {
+      max-height: 140px;
+    }
+    .modal img {
+      max-width: 98vw;
+      max-height: 50vh;
+    }
+    .translate-btn {
+      top: 8px;
+      right: 8px;
+      padding: 7px 12px;
+      font-size: 13px;
+    }
+  }
+</style>
+  </head>
+  <body>
+    <div class="header">Mozilla Thunderbird Installation Guide</div>
+    <div class="main">
+      <nav class="sidebar">
+        <div class="sidebar-logo">
+          <i class="fa-solid fa-dove"></i>
+          <span>Thunderbird Guide</span>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="active" onclick="showPage('install')">
+            <i class="fa-solid fa-download"></i>
+            <span>Install</span>
+          </li>
+          <li onclick="showPage('setupemail')">
+            <i class="fa-solid fa-envelope-open-text"></i>
+            <span>Setup Email</span>
+          </li>
+          <li onclick="showPage('changepassword')">
+            <i class="fa-solid fa-key"></i>
+            <span>Change Password</span>
+          </li>
+        </ul>
+      </nav>
+      <div class="content-area" id="content-area">
+        <section id="install">
+          <h2>1. How to Install Thunderbird</h2>
+          <div class="container" id="steps-container"></div>
+        </section>
+        <section id="setupemail">
+          <h2>2. Setup Email</h2>
+          <div class="container" id="setupemail-steps"></div>
+        </section>
+        <section id="changepassword" style="margin-top: 50px;">
+          <h2>3. How to Change Your Password</h2>
+          <div class="container">
+            <div class="item">
+              <img src="img/11.png" alt="Open Account Settings" />
+              <p><strong>Step 1:</strong> Open <b>Account Settings</b> from the Tools menu.</p>
+            </div>
+            <div class="item">
+              <img src="img/12.png" alt="Select Security" />
+              <p><strong>Step 2:</strong> Navigate to the <b>Security</b> section.</p>
+            </div>
+            <div class="item">
+              <img src="img/13.png" alt="Change Password" />
+              <p><strong>Step 3:</strong> Click <b>Change Password</b> and follow the prompts.</p>
+            </div>
+          <div class="item">
+              <img src="img/14.png" alt="Change Password" />
+              <p><strong>Step 4:</strong>Re-new your password and com comfirm it. Click <b>OK</b> to save changes.</p>
+            </div>
+          </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <div class="modal" id="imgModal">
+      <img id="modalImg" src="" alt="Screenshot" />
+      <div class="modal-controls">
+        <button onclick="prevImg()">← Previous</button>
+        <button onclick="closeModal()">✕ Close</button>
+        <button onclick="nextImg()">Next →</button>
+      </div>
+    </div>
+    <!-- Replace the disabled translate button with an enabled one -->
+    <button class="translate-btn" id="translateBtn" onclick="translateToKhmer()">បកប្រែជា ខ្មែរ</button>
+    <script>
+      const steps = [
+        { text: "Step 1: Go to the official Mozilla Thunderbird website...", img: "img/Capture.JPG" },
+        { text: "Step 2: Click the download button...", img: "img/2.png" },
+        { text: "Step 3: Open the installer file...", img: "img/3.png" },
+        { text: "Step 4: Follow the setup prompts...", img: "img/4.png" },
+        { text: "Step 5: Click Next to continue.", img: "img/5.png" },
+        { text: "Step 6: Click Next to continue.", img: "img/6.png" },
+        { text: "Step 7: Installation complete. Click 'Finish'.", img: "img/7.png" },
+      ];
+      const stepsContainer = document.getElementById("steps-container");
+      steps.forEach((step, index) => {
+        const item = document.createElement("div");
+        item.className = "item";
+        item.innerHTML = `
+          <img src="${step.img}" alt="Step ${index + 1}" onclick="openModal(${index})">
+          <p>${step.text}</p>
+        `;
+        stepsContainer.appendChild(item);
+      });
+      const modal = document.getElementById("imgModal");
+      const modalImg = document.getElementById("modalImg");
+      let currentImg = 0;
+
+      // Add this array for Change Password steps (after setupEmailSteps)
+      const changePasswordSteps = [
+        {
+          img: "img/11.png",
+          text: "<strong>Step 1:</strong> Open <b>Account Settings</b> from the Tools menu."
+        },
+        {
+          img: "img/12.png",
+          text: "<strong>Step 2:</strong> Navigate to the <b>Security</b> section."
+        },
+        {
+          img: "img/13.png",
+          text: "<strong>Step 3:</strong> Click <b>Change Password</b> and follow the prompts."
+        },
+        {
+          img: "img/14.png",
+          text: "<strong>Step 4:</strong> Re-new your password and confirm it. Click <b>OK</b> to save changes."
+        }
+      ];
+
+      // Track which section's images are being shown
+      let currentSection = "install"; // "install", "setupemail", "changepassword"
+
+      // Update openModal to accept section and index
+      function openModal(index, section = "install") {
+        currentImg = index;
+        currentSection = section;
+        modal.style.display = "flex";
+        if (section === "install") {
+          modalImg.src = steps[currentImg].img;
+          modalImg.alt = "Step " + (currentImg + 1);
+        } else if (section === "setupemail") {
+          modalImg.src = setupEmailSteps[currentImg].img;
+          modalImg.alt = "Setup Step " + (currentImg + 1);
+        } else if (section === "changepassword") {
+          modalImg.src = changePasswordSteps[currentImg].img;
+          modalImg.alt = "Change Password Step " + (currentImg + 1);
+        }
+      }
+
+      function closeModal() {
+        modal.style.display = "none";
+      }
+
+      // Update nextImg and prevImg to use currentSection
+      function nextImg() {
+        if (currentSection === "install") {
+          currentImg = (currentImg + 1) % steps.length;
+          modalImg.src = steps[currentImg].img;
+        } else if (currentSection === "setupemail") {
+          currentImg = (currentImg + 1) % setupEmailSteps.length;
+          modalImg.src = setupEmailSteps[currentImg].img;
+        } else if (currentSection === "changepassword") {
+          currentImg = (currentImg + 1) % changePasswordSteps.length;
+          modalImg.src = changePasswordSteps[currentImg].img;
+        }
+      }
+
+      function prevImg() {
+        if (currentSection === "install") {
+          currentImg = (currentImg - 1 + steps.length) % steps.length;
+          modalImg.src = steps[currentImg].img;
+        } else if (currentSection === "setupemail") {
+          currentImg = (currentImg - 1 + setupEmailSteps.length) % setupEmailSteps.length;
+          modalImg.src = setupEmailSteps[currentImg].img;
+        } else if (currentSection === "changepassword") {
+          currentImg = (currentImg - 1 + changePasswordSteps.length) % changePasswordSteps.length;
+          modalImg.src = changePasswordSteps[currentImg].img;
+        }
+      }
+
+      // Add this function to show only one section at a time
+      function showPage(pageId) {
+        // Hide all sections
+        document.querySelectorAll('.content-area > section').forEach(sec => {
+          sec.style.display = 'none';
+        });
+        // Show the selected section
+        document.getElementById(pageId).style.display = 'block';
+
+        // Update sidebar active state
+        document.querySelectorAll('.sidebar-menu li').forEach(li => li.classList.remove('active'));
+        const ids = ['install', 'setupemail', 'changepassword'];
+        const idx = ids.indexOf(pageId);
+        if (idx !== -1) {
+          document.querySelectorAll('.sidebar-menu li')[idx].classList.add('active');
+        }
+      }
+
+      // On page load, show the first section only
+      window.addEventListener('DOMContentLoaded', () => {
+        showPage('install');
+      });
+
+      function scrollToSection(id) {
+        document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+        document.querySelectorAll('.sidebar-menu li').forEach(li => li.classList.remove('active'));
+        const ids = ['install', 'setupemail', 'changepassword'];
+        const idx = ids.indexOf(id);
+        if (idx !== -1) {
+          document.querySelectorAll('.sidebar-menu li')[idx].classList.add('active');
+        }
+      }
+      window.addEventListener("click", (e) => {
+        if (e.target === modal) closeModal();
+      });
+      // Setup Email steps for popup
+      const setupEmailSteps = [
+        {
+          img: "img/8.png",
+          text: "<strong>Account: Setup</strong><br>Open Thunderbird and Set up an account</b>. Enter your name, email address, and password."
+        },
+        {
+          img: "img/9.png",
+          text: "<strong>Manual Configuration:</strong><br>Set up your account and click <b>Done</b>. Thunderbird will test your settings and add your account."
+        },
+        {
+          img: "img/10.png",
+          text: "<strong>Finish Setup:</strong><br>Click <b>Allow</b> to give Thunderbird access to your email account. Your email is now set up and ready to use."
+        }
+      ];
+
+      const setupEmailContainer = document.getElementById("setupemail-steps");
+      setupEmailSteps.forEach((step, idx) => {
+        const item = document.createElement("div");
+        item.className = "item";
+        item.innerHTML = `
+          <img src="${step.img}" alt="Setup Step ${idx + 1}" onclick="openSetupEmailModal(${idx})">
+          <p>${step.text}</p>
+        `;
+        setupEmailContainer.appendChild(item);
+      });
+
+      // Setup Email modal logic
+      let currentSetupEmailImg = 0;
+      function openSetupEmailModal(idx) {
+        openModal(idx, "setupemail");
+      }
+
+      function translateToKhmer() {
+        // Sidebar (except "Thunderbird Guide")
+        document.querySelectorAll('.sidebar-menu li span')[0].innerText = "ដំឡើងកម្មវិធី";
+        document.querySelectorAll('.sidebar-menu li span')[1].innerText = "កំណត់អ៊ីមែល";
+        document.querySelectorAll('.sidebar-menu li span')[2].innerText = "ប្តូរពាក្យសម្ងាត់";
+
+        // Header (do not translate "Mozilla Thunderbird Installation Guide")
+        // document.querySelector('.header').innerText = "Mozilla Thunderbird Installation Guide";
+
+        // Section titles
+        document.querySelector('#install h2').innerText = "១. របៀបដំឡើង Thunderbird";
+        document.querySelector('#setupemail h2').innerText = "២. កំណត់អ៊ីមែល";
+        document.querySelector('#changepassword h2').innerText = "៣. របៀបប្តូរពាក្យសម្ងាត់របស់អ្នក";
+
+        // Install steps
+        const installSteps = [
+          "ជំហាន ១: ចូលទៅកាន់គេហទំព័រ Mozilla Thunderbird...",
+          "ជំហាន ២: ចុចប៊ូតុងទាញយក...",
+          "ជំហាន ៣: បើកឯកសារសម្រាប់ទុក កម្មវិធីដែលបានទាញយក...",
+          "ជំហាន ៤: បើកឯកសារដែលដបានទាញយក​ បន្នាប់មកចុចពីរដងទៅលើ​​ ឯកសាដែលបានទាញយក ...",
+          "ជំហាន ៥: ចុច Next ដើម្បីបន្តដំឡើង។",
+          "ជំហាន ៦: ចុច Next ដើម្បីបន្តដំឡើង។",
+          "ជំហាន ៧: ដំឡើងរួចរាល់។ បន្ទាប់មកចុច 'Finish'។"
+        ];
+        document.querySelectorAll('#steps-container .item p').forEach((p, i) => {
+          if (installSteps[i]) p.innerHTML = installSteps[i];
+        });
+
+        // Setup Email steps
+        const setupEmailSteps = [
+          "<strong>កំណត់គណនី</strong><br>បើក Thunderbird​ <b>Set up an account</b>។ បញ្ចូលទិន្ន័យរបស់អ្នកចូល​ ឈ្មោះ អាសយដ្ឋានអ៊ីមែល និងពាក្យសម្ងាត់។",
+          "<strong>កំណត់ដោយដៃ</strong><br>កំណត់គណនីរបស់អ្នក ហើយចុច <b>Done</b>។ Thunderbird នឹងធ្វើរការកំណត់ទៅលើ គណនីរបស់អ្នក។",
+          "<strong>បញ្ចប់ការកំណត់</strong><br>ចុច <b>Allow</b> ដើម្បីអនុញ្ញាតឱ្យ Thunderbird ចូលទៅដំណើរការទៅលើគណនីអ៊ីមែលរបស់អ្នក។"
+        ];
+        document.querySelectorAll('#setupemail-steps .item p').forEach((p, i) => {
+          if (setupEmailSteps[i]) p.innerHTML = setupEmailSteps[i];
+        });
+
+        // Change Password steps
+        const changePwSteps = [
+          "<strong>ជំហាន ១:</strong> ចុចចូលទៅកាន់ <b>Account Settings</b> ពីម៉ឺនុយ Tools។",
+          "<strong>ជំហាន ២:</strong> ទៅកាន់ផ្នែក <b>Private & Security</b>។",
+          "<strong>ជំហាន ៣:</strong> ចុច <b>Change Password</b>។",
+          "<strong>ជំហាន ៤:</strong> បញ្ចូលពាក្យសម្ងាត់ថ្មី និងបញ្ជាក់។ ចុច <b>OK</b> ដើម្បីរក្សាទុក។"
+        ];
+        document.querySelectorAll('#changepassword .item p').forEach((p, i) => {
+          if (changePwSteps[i]) p.innerHTML = changePwSteps[i];
+        });
+
+        // Modal buttons
+        document.querySelectorAll('.modal-controls button')[0].innerText = "← មុន";
+        document.querySelectorAll('.modal-controls button')[1].innerText = "✕ បិទ";
+        document.querySelectorAll('.modal-controls button')[2].innerText = "បន្ទាប់ →";
+
+        // Change button to English
+        document.getElementById('translateBtn').innerText = "Translate to English";
+        document.getElementById('translateBtn').onclick = translateToEnglish;
+
+        // Add Khmer font to body
+        document.body.classList.add('khmer');
+      }
+
+      function translateToEnglish() {
+        // Sidebar (except "Thunderbird Guide")
+        document.querySelectorAll('.sidebar-menu li span')[0].innerText = "Install";
+        document.querySelectorAll('.sidebar-menu li span')[1].innerText = "Setup Email";
+        document.querySelectorAll('.sidebar-menu li span')[2].innerText = "Change Password";
+
+        // Header (do not translate "Mozilla Thunderbird Installation Guide")
+        // document.querySelector('.header').innerText = "Mozilla Thunderbird Installation Guide";
+
+        // Section titles
+        document.querySelector('#install h2').innerText = "1. How to Install Thunderbird";
+        document.querySelector('#setupemail h2').innerText = "2. Setup Email";
+        document.querySelector('#changepassword h2').innerText = "3. How to Change Your Password";
+
+        // Install steps
+        const installSteps = [
+          "Step 1: Go to the official Mozilla Thunderbird website...",
+          "Step 2: Click the download button...",
+          "Step 3: Open the installer file...",
+          "Step 4: Follow the setup prompts...",
+          "Step 5: Click Next to continue.",
+          "Step 6: Click Next to continue.",
+          "Step 7: Installation complete. Click 'Finish'."
+        ];
+        document.querySelectorAll('#steps-container .item p').forEach((p, i) => {
+          if (installSteps[i]) p.innerHTML = installSteps[i];
+        });
+
+        // Setup Email steps
+        const setupEmailSteps = [
+          "<strong>Account: Setup</strong><br>Open Thunderbird and <b>Set up an account</b>. Enter your name, email address, and password.",
+          "<strong>Manual Configuration:</strong><br>Set up your account and click <b>Done</b>. Thunderbird will test your settings and add your account.",
+          "<strong>Finish Setup:</strong><br>Click <b>Allow</b> to give Thunderbird access to your email account. Your email is now set up and ready to use."
+        ];
+        document.querySelectorAll('#setupemail-steps .item p').forEach((p, i) => {
+          if (setupEmailSteps[i]) p.innerHTML = setupEmailSteps[i];
+        });
+
+        // Change Password steps
+        const changePwSteps = [
+          "<strong>Step 1:</strong> Open <b>Account Settings</b> from the Tools menu.",
+          "<strong>Step 2:</strong> Navigate to the <b>Security</b> section.",
+          "<strong>Step 3:</strong> Click <b>Change Password</b> and follow the prompts.",
+          "<strong>Step 4:</strong> Re-new your password and confirm it. Click <b>OK</b> to save changes."
+        ];
+        document.querySelectorAll('#changepassword .item p').forEach((p, i) => {
+          if (changePwSteps[i]) p.innerHTML = changePwSteps[i];
+        });
+
+        // Modal buttons
+        document.querySelectorAll('.modal-controls button')[0].innerText = "← Previous";
+        document.querySelectorAll('.modal-controls button')[1].innerText = "✕ Close";
+        document.querySelectorAll('.modal-controls button')[2].innerText = "Next →";
+
+        // Change button to Khmer
+        document.getElementById('translateBtn').innerText = "បកប្រែជា ខ្មែរ";
+        document.getElementById('translateBtn').onclick = translateToKhmer;
+
+        // Remove Khmer font from body
+        document.body.classList.remove('khmer');
+      }
+
+      // Make Change Password images open the modal
+      document.querySelectorAll('#changepassword .item img').forEach((img, idx) => {
+        img.style.cursor = "pointer";
+        img.onclick = function() {
+          openModal(idx, "changepassword");
+        };
+      });
+    </script>
+  </body>
+</html>
